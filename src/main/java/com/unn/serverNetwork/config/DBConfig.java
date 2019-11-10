@@ -8,7 +8,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@EnableArangoRepositories(basePackages = {"com.netcracker"})
+@EnableArangoRepositories(basePackages = {"com.unn.serverNetwork.model"})
 @RequiredArgsConstructor
 public class DBConfig extends AbstractArangoConfiguration {
 
