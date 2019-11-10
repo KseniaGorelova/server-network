@@ -1,0 +1,11 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+
+#DataBaseaParametrs
+arangodb:
+  database: network
+  user: root
+  password: root
+  host: localhost
+  port: 8529
