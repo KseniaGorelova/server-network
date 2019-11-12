@@ -6,13 +6,13 @@ import java.util.Date;
 public class Greeting {
 
     private String from;
-    private String message;
+    private int message;
     private String topic;
     private Date time = new Date();
 
     public Greeting() {}
 
-    public Greeting(String from, String message, String topic)
+    public Greeting(String from, int message, String topic)
     {
         this.from = from;
         this.message = message;
@@ -29,12 +29,12 @@ public class Greeting {
         this.from = from;
     }
 
-    public String getMessage()
+    public int getMessage()
     {
         return message;
     }
 
-    public void setMessage(String message)
+    public void setMessage(int message)
     {
         this.message = message;
     }
@@ -56,8 +56,9 @@ public class Greeting {
 
     public String toString()
     {
+
         return String
-                .format("{from: %1$-10s | topic: %2$-10s | time: %4$-15d | mesg: %3$s}",
+                .format("{\"from\":\" %1$-10s\",\"topic\": \"%2$-10s\" \"time\":\" %4$-15d\" \"mesg\": %3$s}",
                         getFrom(), getTopic(),
                         getMessage(), getTime().getTime());
     }

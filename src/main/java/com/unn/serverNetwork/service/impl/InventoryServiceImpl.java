@@ -1,5 +1,8 @@
 package com.unn.serverNetwork.service.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.unn.serverNetwork.exception.ObjectNotFoundException;
 import com.unn.serverNetwork.model.Interface;
 import com.unn.serverNetwork.model.Link;
@@ -14,6 +17,7 @@ import lombok.RequiredArgsConstructor;
 import com.google.common.collect.Lists;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 import static com.unn.serverNetwork.model.CollectionsNames.*;
@@ -150,7 +154,36 @@ public class InventoryServiceImpl implements InventoryService {
 
     @Override
     public String storeData(String data){
-        return null;
+        ObjectMapper mapper = new ObjectMapper();
+        JsonNode nodes = null;
+        try {
+            nodes = mapper.readTree(data);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        for (JsonNode rootNode: nodes) {
+
+            JsonNode ne = rootNode.path("network-element");
+            JsonNode inter = rootNode.path("interface");
+
+            NetworkElement netElem = null;
+            Interface[] interfaces = null;
+            try {
+                netElem = mapper.treeToValue(ne, NetworkElement.class);
+                interfaces = mapper.treeToValue(inter, Interface[].class);
+            } catch (JsonProcessingException e) {
+                e.printStackTrace();
+            }
+
+            netElem = storeNetworkElement(netElem);
+            Interface in = null;
+            for (Interface i : interfaces) {
+                in = storeInterface(netElem.getId(), i);
+            }
+        }
+
+        return "added";
     }
 
     private NetworkElement findNeById(String networkElementId) {

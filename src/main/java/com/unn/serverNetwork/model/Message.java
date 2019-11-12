@@ -8,11 +8,11 @@ package com.unn.serverNetwork.model;
 public class Message
 {
     private String from;
-    private String text;
+    private int text;
 
     public Message() {}
 
-    public Message(String from, String text)
+    public Message(String from, int text)
     {
 	this.from = from;
 	this.text = text;
@@ -28,12 +28,12 @@ public class Message
         this.from = from;
     }
 
-    public String getText()
+    public int getText()
     {
         return text;
     }
 
-    public void setText(String text)
+    public void setText(int text)
     {
         this.text = text;
     }
