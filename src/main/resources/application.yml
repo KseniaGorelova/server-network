@@ -4,7 +4,7 @@ spring:
 
 #DataBaseaParametrs
 arangodb:
-  database: network
+  database: networks
   user: root
   password: root
   host: localhost
