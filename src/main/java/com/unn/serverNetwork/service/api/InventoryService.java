@@ -3,8 +3,8 @@ package com.unn.serverNetwork.service.api;
 import com.unn.serverNetwork.model.Interface;
 import com.unn.serverNetwork.model.Link;
 import com.unn.serverNetwork.model.NetworkElement;
+import com.unn.serverNetwork.model.Route;
 
-import java.io.IOException;
 import java.util.List;
 
 public interface InventoryService {
@@ -27,6 +27,8 @@ public interface InventoryService {
     Link deleteLink(String id);
 
     List<Link> getAllLinks();
+
+    List<Route> getRoutes(String id);
 
     Interface deleteInterfaces(String id);
 

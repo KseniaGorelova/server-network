@@ -3,6 +3,7 @@ package com.unn.serverNetwork.controller;
 import com.unn.serverNetwork.model.Interface;
 import com.unn.serverNetwork.model.Link;
 import com.unn.serverNetwork.model.NetworkElement;
+import com.unn.serverNetwork.model.Route;
 import com.unn.serverNetwork.service.api.InventoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -73,5 +74,10 @@ public class InventoryController {
     @PostMapping
     public String storeData(@RequestBody String data) {
         return inventoryService.storeData(data);
+    }
+
+    @GetMapping("route/{id}")
+    public List<Route> getRoutes(@PathVariable String id){
+        return inventoryService.getRoutes(id);
     }
 }

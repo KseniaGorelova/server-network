@@ -1,13 +1,12 @@
 package com.unn.serverNetwork.service.impl;
 
+import com.arangodb.util.MapBuilder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.unn.serverNetwork.config.DBConfig;
 import com.unn.serverNetwork.exception.ObjectNotFoundException;
-import com.unn.serverNetwork.model.Interface;
-import com.unn.serverNetwork.model.Link;
-import com.unn.serverNetwork.model.NeToInterface;
-import com.unn.serverNetwork.model.NetworkElement;
+import com.unn.serverNetwork.model.*;
 import com.unn.serverNetwork.model.repository.InterfaceRepository;
 import com.unn.serverNetwork.model.repository.LinkRepository;
 import com.unn.serverNetwork.model.repository.NeRepository;
@@ -15,10 +14,12 @@ import com.unn.serverNetwork.model.repository.NeToIntrRepository;
 import com.unn.serverNetwork.service.api.InventoryService;
 import lombok.RequiredArgsConstructor;
 import com.google.common.collect.Lists;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Map;
 
 import static com.unn.serverNetwork.model.CollectionsNames.*;
 
@@ -30,6 +31,8 @@ public class InventoryServiceImpl implements InventoryService {
     private final NeRepository neRepository;
     private final NeToIntrRepository neToInterRepository;
     private final LinkRepository linkRepository;
+    @Autowired
+    private DBConfig database;
 
     @Override
     public List<NetworkElement> getNetworkElements() {
@@ -130,6 +133,22 @@ public class InventoryServiceImpl implements InventoryService {
     @Override
     public List<Link> getAllLinks() {
         return Lists.newArrayList(linkRepository.findAll());
+    }
+
+    @Override
+    public List<Route> getRoutes(String id) {
+        String q = "LET startV  =  (for i in `interface` return i) " +
+                "LET treeWithoutRoot = ("+
+                "for v, e , p in 1..99 ANY @intID `link` " +
+                "return  {inter: v , hops : LENGTH(p.edges)}) "+
+                "LET tree = UNIQUE(treeWithoutRoot) " +
+                "for i in tree let nelink = FIRST(for to in `ne-to-interface` " +
+                "filter to._to == i.inter._id return to._from) " +
+                "let ne = FIRST(for n in `net-element` " +
+                "filter n._id == nelink return n.name) " +
+                "return { ne , inter: i.inter.name, hops: i.hops}";
+        Map<String, Object> bindVars = new MapBuilder().put("intID", getID(INTERFACE, id)).get();
+        return  database.getDb().db("networks").query(q,bindVars, null, Route.class).asListRemaining();
     }
 
     @Override
