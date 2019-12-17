@@ -23,6 +23,9 @@ public class DBConfig extends AbstractArangoConfiguration {
     @Value("${arangodb.database}")
     String dataBase;
 
+    public ArangoDB getDb() {
+        return arango().build();
+    }
 
     @Override
     public ArangoDB.Builder arango() {
